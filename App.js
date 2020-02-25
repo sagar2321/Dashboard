@@ -8,7 +8,9 @@ import Box from '@material-ui/core/Box';
 import Grid from "@material-ui/core/Grid";
 import Fab from '@material-ui/core/Fab';
 import Badge from '@material-ui/core/Badge';
-import Logo from './logo.png'
+import Logo from './logo.png';
+
+
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -30,12 +32,14 @@ import Divider from '@material-ui/core/Divider';
 import Chart from './components/Chart';
 import Table from './components/Table';
 import Upload from './Upload';
+import { BrowserRouter as Router, Switch, Route, Link ,NavLink} from 'react-router-dom';
+
+
 
 
 // const useStyles = makeStyles(theme => ({
 //   root: {
 //     flexGrow: 1,
-//   },
 //   menuButton: {
 //     marginRight: theme.spacing(2),
 //   },
@@ -44,7 +48,7 @@ import Upload from './Upload';
 //   },
 // }));
 
-function TabPanel(props) {
+export function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -61,42 +65,43 @@ function TabPanel(props) {
   );
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
+// TabPanel.propTypes = {
+//   children: PropTypes.node,
+//   index: PropTypes.any.isRequired,
+//   value: PropTypes.any.isRequired,
+// };
 
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
+// function a11yProps(index) {
+//   return {
+//     id: `simple-tab-${index}`,
+//     'aria-controls': `simple-tabpanel-${index}`,
+//   };
+// }
 
 
 class App extends Component{
   constructor(){
     super();
-    this.state={
-      value:0
+    // this.state={
+    //   value:0
     }
-  }
+  
 
-  componentDidMount=()=>{
+  
 
-  }
 
-   handleChange = (event,newValue) => {
-     console.log(event);
-     console.log(newValue);
-    this.setState({value:newValue},()=>console.log(this.state.value));
-  };
+  // componentDidMount=()=>{
+    
+  // }
 
-  onSubmit = () => {
-history.push('/Upload.js');
-  }
+  //  handleChange = (event,newValue) => {
+  //    console.log(event);
+  //    console.log(newValue);
+  //   this.setState({value:newValue},()=>console.log(this.state.value));
+  // };
+
+  
 
   
 
@@ -123,6 +128,7 @@ history.push('/Upload.js');
     marginTop:"10%"
   }
   return (
+    <Router>
     <div className="App">
       <AppBar position="static">
         <Toolbar>
@@ -133,12 +139,12 @@ history.push('/Upload.js');
             News
           </Typography> */}
           <div style={navbarItem}>
-            <Tabs value={this.state.value} onChange={this.handleChange}>
-           <Tab label="Dashboard" {...a11yProps(0)} />
-           <Tab label="Profile" {...a11yProps(1)} />
-           <Tab label="Membership" {...a11yProps(2)} />
-           <Tab label="Setting" {...a11yProps(3)} />
-           <Tab label="Support" {...a11yProps(4)} />
+            <Tabs >
+           <NavLink to='/' exact label="Dashboard">Dashboard</NavLink>
+           <NavLink to='/profile' exact label="Profile"  >Profile</NavLink>
+           <NavLink to='/Membership' exact label="Membership">Membership</NavLink>
+           <NavLink to='/Setting' exact label="Setting" >Setting</NavLink>
+           <NavLink to='/Support' exact label="Support"  >Support</NavLink>
         </Tabs>
           </div>
           <IconButton>
@@ -146,6 +152,7 @@ history.push('/Upload.js');
          
           <Icon className="fa fa-bell" color="secondary" />
           
+
       </Badge>
       </IconButton>
       <IconButton>
@@ -153,13 +160,29 @@ history.push('/Upload.js');
           </IconButton>
         </Toolbar>
       </AppBar>
+
+      <Route path="/" exact strict render={
+          () => {
+            return ( 
+
       <div>
-      <TabPanel value={this.state.value} index={0}>
+      <TabPanel>
       <Grid container spacing={1}>
                 <Grid item xs={12} sm={3}>
+
+
+           
+            
                 <div >
-        <Fab  style={style} variant="extended" color="primary"  onClick={this.onSubmit} >Scan OCT</Fab>
+               
+                {/* <Route exact path="./Upload.js" component={Upload} />  */}
+                <NavLink to='./Upload' exact>
+        <Fab  style={style} variant="extended" color="primary"  >Scan OCT</Fab>
+        </NavLink>
                 </div>
+               
+                
+
                 <div style={button2}>
                 <Fab style={style} variant="extended" color="primary">OCT Layer Segmentation</Fab>
                 </div>
@@ -259,26 +282,85 @@ history.push('/Upload.js');
           </Paper>
           </Grid>
           </Grid>
-      </TabPanel>
-      <TabPanel value={this.state.value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={this.state.value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={this.state.value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={this.state.value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={this.state.value} index={5}>
-        Item six
+
       </TabPanel>
       </div>
-  </div>
+
+      );
+}
+}/>
+
+
+      <Route path="/profile" exact strict render={
+          () => {
+            return ( 
+      <TabPanel >
+        Item two
+      </TabPanel>
+
+);
+}
+}/>
+
+
+
+<Route path="/Membership" exact strict render={
+          () => {
+            return ( 
+      <TabPanel >
+        Item Three
+      </TabPanel>
+      );
+    }
+    }/>
+
+
+
+<Route path="/Setting" exact strict render={
+          () => {
+            return ( 
+      <TabPanel >
+        Item Four
+      </TabPanel>
+ );
+}
+}/>
+
+
+
+<Route path="/Support" exact strict render={
+          () => {
+            return ( 
+      <TabPanel >
+        Item Five
+      </TabPanel>
+      );
+    }
+    }/>
+
+
+<Route path="/Upload" exact strict render={
+          () => {
+            return ( 
+      <Upload />
+      );
+    }
+    }/>
+
+
+
+
+
+      </div>
+
+
+ 
+  
+  </Router>
+
+  
   );
         }
-}
+      }
 
 export default App;
