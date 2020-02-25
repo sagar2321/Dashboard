@@ -3,6 +3,8 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Link from '@material-ui/core/Link';
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
+import axios from "axios";
+
 
 import './Upload.css';
 
@@ -23,13 +25,65 @@ import './Upload.css';
 
 
   onChangeHandler=event=>{
+    var files = event.target.files
+    if(this.maxSelectFile(event) && this.checkMimeType(event)){ 
+    // if return true allow to setState
+       this.setState({
+       selectedFile: files
+    })
+ }
+}
 
-   this.setState({
-      selectedFile: event.target.files[0],
-      loaded: 0,
+  maxSelectFile=(event)=>{
+    let files = event.target.files // create file object
+        if (files.length > 1) { 
+           const msg = 'Only 1 image can be uploaded at a time'
+           event.target.value = null // discard selected file
+           console.log(msg)
+          return false;
+ 
+      }
+    return true;
+ 
+ }
 
-})
+ checkMimeType=(event)=>{
+  //getting file object
+  let files = event.target.files 
+  //define message container
+  let err = ''
+  // list allow mime type
+ const types = ['image/png', 'image/jpeg', 'image/gif']
+  // loop access array
+  for(var x = 0; x<files.length; x++) {
+   // compare file type find doesn't matach
+       if (types.every(type => files[x].type !== type)) {
+       // create error message and assign to container   
+       err += files[x].type+' is not a supported format\n';
+     }
+   };
+
+ if (err !== '') { // if message not same old that mean has error 
+      event.target.value = null // discard selected file
+      console.log(err)
+       return false; 
   }
+ return true;
+
+}
+
+onClickHandler = () => {
+  const data = new FormData()
+  data.append('file', this.state.selectedFile)
+  axios.post("http://localhost:8000/upload", data, { 
+     // receive two    parameter endpoint url ,form data
+ })
+ .then(res => { // then print response status
+  console.log(res.statusText)
+})
+}
+
+
 
     render(){
     
@@ -41,7 +95,7 @@ import './Upload.css';
               <label>Upload your files</label>
               <input type="file" class="form-control" multiple="" name="file" onChange={this.onChangeHandler}></input>
             </div>
-            <button type="button" class="btn btn-success btn-block">Upload</button>
+            <button type="button" class="btn btn-success btn-block" onClick={this.onClickHandler}>Upload</button>
 
 
           </div>
